@@ -1,0 +1,61 @@
+﻿@page "/departments"
+@using ClassLibraryDAL
+@using ClassLibraryModel
+
+<h3>Departments</h3>
+<EditForm Model="departmentsModel" OnSubmit="SaveDepartments">
+    <label for="Name">Department Name</label>
+    <input type="text" @bind-value="departmentsModel.Name" /><br><br>
+    <label for="Name">Block</label>
+    <input type="text" @bind-value="departmentsModel.Block" /><br><br>
+    <label for="IsActive">Status</label>
+    <input type="text" @bind-value="departmentsModel.IsActive" /><br><br>
+    <button type="submit">Create Department</button>
+</EditForm>
+
+
+
+<table>
+    @foreach (var item in departmentData)
+    {
+        {
+            <tr>
+                <td> @item.pk_DepartmentId</td>
+                <td> @item.Name</td>
+                <td> @item.fk_OrganizationId</td>
+                <td> @item.Block</td>
+                <td> @item.IsActive</td>
+            </tr>
+        }
+    }
+</table>
+
+@code {
+    private DepartmentsModel departmentsModel { get; set; } = new DepartmentsModel();
+    private void SaveDepartments()
+    {
+        DepartmentsDAL.SaveDepartments(departmentsModel);
+    }
+
+    private List<DepartmentsModel> departmentData { get; set; } = new List<DepartmentsModel>();
+    protected override void OnInitialized()
+    {
+        ReadDepartments();
+    }
+    public void ReadDepartments()
+    {
+        departmentData = DepartmentsDAL.ReadDepartments();
+    }
+    private DepartmentsModel deleteDepartment { get; set; } = new DepartmentsModel();
+    private void DeleteFaculty(int DeleteId)
+    {
+        int i = DepartmentsDAL.DeleteDepartment(DeleteId);
+        if (i == 1)
+        {
+            ReadDepartments();
+        }
+    }
+
+
+}
+
